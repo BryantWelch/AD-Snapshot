@@ -1,0 +1,71 @@
+# PowerShell module files
+*.psd1
+*.psm1
+*.ps1xml
+
+# PowerShell build outputs
+*.dll
+*.exe
+*.msi
+*.zip
+
+# Module manifest
+*.psd1
+
+# Logs
+logs/
+*.log
+*.log.?
+*.log.??
+
+# Temporary files
+*.tmp
+*.temp
+*~
+~*
+.~*
+
+# User-specific files
+*.user
+*.suo
+*.userprefs
+.vs/
+.vscode/
+.idea/
+
+# Credential files
+*.pfx
+*.cer
+*.crt
+*.key
+*credential*
+*password*
+*secret*
+
+# Windows specific
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# PowerShell Studio files
+*.psproj
+*.psprojs
+*.pssln
+
+# Output folders
+output/
+bin/
+obj/
+
+# Test results
+TestResults/
+coverage/
+
+# Package management
+packages/
+.packages/
+.nuget/
+
+# Specific to AD-Snapshot if needed
+# Add any project-specific exclusions here
