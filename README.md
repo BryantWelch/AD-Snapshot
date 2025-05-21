@@ -1,4 +1,4 @@
-# AD Snapshot Report 
+# AD Snapshot Report v1.2.0
 ----
 
 This PowerShell tool is designed to collect information about Active Directory (AD) objects, including admin membership, user information, and computer information. It provides both a command-line script and a graphical user interface (GUI) to make it easy to generate comprehensive AD reports. The tool uses various AD cmdlets to retrieve data from your domain.
@@ -22,21 +22,25 @@ This PowerShell tool is designed to collect information about Active Directory (
 
   1. Simply double-click the `Launch-AD-Snapshot-GUI.vbs` file to start the application without showing a PowerShell console window
   2. Configure your settings in the GUI:
-     * **Configuration Tab**: Set OUs, realm, admin group, and other core settings
+     * **Configuration Tab**: Set OUs, realm, domain controller, domain common name, admin group, and other core settings
      * **Output Options Tab**: Configure file saving options, PDF generation, and email settings
      * **Run Report Tab**: Execute the report and view progress
   3. Click the "Run Report" button to generate your AD snapshot
   4. Use the "View Report" button to open the generated report
   5. Settings can be saved and loaded for future use
+  6. Hover over any field to see helpful tooltips explaining each option
 
 ### Command-Line Script
 
-  1. Open and edit the AD-Snapshot.ps1 file with a text editor like Notepad++, specifying the necessary parameters:
-     * $OUlist: The OU you want to run this script against
-     * $realm: The Realm name of your organization
-     * $AdminGroup: The OU Admin group you want the Admin section to use
-     * $DomainCN: Domain Common Name (Example "DC=example,DC=org")
-     * $Server: The Domain Controller of your organization
+  1. Open and edit the AD-Snapshot.ps1 file with a text editor like Notepad++. All configurable settings are clearly marked in the CONFIGURATION SETTINGS section at the top of the script:
+     * **Active Directory Settings**:
+       * $OUlist: The OU you want to run this script against
+       * $realm: The Realm name of your organization
+     * **Domain Controller Settings**:
+       * $DomainCN: Domain Common Name (Example "DC=example,DC=org")
+       * $Server: The Domain Controller of your organization
+     * **Admin Group Setting**:
+       * $AdminGroup: The OU Admin group you want the Admin section to use
   2. By default the script will save a file in the location where the .ps1 is ran. If you want to email this file or create a .pdf, specify the optional parameters:
      * $SendEmail: "Y" will send a report email. "N" will not send a report email
      * $smtpserver: The SMTP server that will be used to email the resulting report

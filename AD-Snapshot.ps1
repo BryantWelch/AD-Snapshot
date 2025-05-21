@@ -1,5 +1,5 @@
-﻿<######################################################################################################
-## Active Directory Snapshot Report Version 1.0.0 last updated on 1/13/2025
+<######################################################################################################
+## Active Directory Snapshot Report Version 1.2.0 last updated on 5/21/2025
 ## updated by Bryant Welch 
 #######################################################################################################
 
@@ -29,56 +29,72 @@ $StartupVars = Get-Variable | Select-Object -ExpandProperty Name  ###  DO NOT MO
 $StartupVars += "PSItem"  ###  DO NOT MODIFY
 ########################################################################################################
 
-$OUlist = "XXX"            # Change to the OU you want to run this script against 
-      ###    If you have severial OUs, you can list them like: "MARSHA1","MARSHA2","MARSHA3"  ...Do NOT run the Server Section across the WAN
-$realm = "example"                # Change to your organization's Realm name
+################################################################################################################
+#                                  CONFIGURATION SETTINGS                                              #
+#                                                                                                      #
+#                MODIFY THE SETTINGS BELOW TO MATCH YOUR ORGANIZATION'S ENVIRONMENT                    #
+#                IF USING THE GUI, THESE SETTINGS WILL BE CONFIGURED THROUGH THE INTERFACE             #
+################################################################################################################
 
-$CreateFile = "Y"            # Y will save the report as file.
-      # Saving this report to file is the recomended action and will allow for sortable user and computer lists.
-$outputpath = ""             # If this is blank, the report will be saved on your desktop.
-$WantPDFFile = "false"        # true will create a PDF file saved to a folder. (and/or attached to email)
-      # If you want PDFs created by this script you need to download and install wkhtmltopdf.exe  (see above)
-$PDFConverter = "c:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe" # Path to wkhtmltopdf.exe 
+# REQUIRED: Active Directory Settings
+# ===================================
+$OUlist = "XXX"                               # Change to the OU you want to run this script against 
+                                              # For multiple OUs, use format: "OU1","OU2","OU3"
+                                              # CAUTION: Do NOT run the Server Section across the WAN
+$realm = "example"                           # Your organization's Realm name
 
-$SendEmail = "N"                                # "Y" will send a report email. "N" will not send a report email
-$CcList = ""                                    # additional recipients for the email - Sample: "email.one@example.com", "email.two@example.com"
-$smtpserver = "smtp.example.org"				# change to the smtp server you want used to email the report
+# IMPORTANT: Domain Controller Settings
+# ====================================
+# These settings MUST be configured correctly for your environment
+if ($realm -eq "example") {
+    $DomainCN = "DC=example,DC=org"          # Change to match your domain (e.g., DC=contoso,DC=com)
+    $Server = "domaincontroller.example.org"  # Change to your domain controller FQDN (e.g., DC01.contoso.com)
+}
 
-$ServerUpTimeAlarm = 30                         # number of days on before marking red 
-$ComputerStaleDays = 80                         # number of days a computer is allowed off of the network
-$UserStaleDays = 80                             # number of days a User is allowed off of the network
-$PCsort = "name"                                # use "name" will sort by computer name, otherwise date Last Seen is used
-$Usersort = "name"                              # use "name" will sort by user name, otherwise date of last Login is used
-$HideDisabledUsers = "false"                    # when "true" will not show any user that is disabled 
-$listALLComputers = "true"                      # when "true" servers will also display with computers
+# Admin Group Setting
+# ==================
+$AdminGroup = "Example Admin"                # The admin group you want to report on
 
-##  Used to skip sections
-$skipadmin = "false"                            # when "true" admin section will be skipped
-$skipServer = "false" 							# when "true" server section will be skipped
-$skipUsers = "false"    						# when "true" users section will be skipped
-$skipComputers = "false" 						# when "true" computers section will be skipped
-$skipBitlockerStatus = "true"					# when "true" bitlocker section will be skipped
-########################################################################################################
-##   DO NOT CHANGE THE BELOW LINES
-########################################################################################################
-Import-Module ActiveDirectory 
-foreach ($subOU in $OUlist) {         ###  DO NOT MODIFY
-try {$subOUonly = $subOU.substring(0,$subOU.IndexOf(",",1))           ###  DO NOT MODIFY
-} catch { $subOUonly = $subOU }       ###  DO NOT MODIFY
-$starttime = Get-Date
-########################################################################################################
-##   DO NOT CHANGE THE ABOVE LINES
-########################################################################################################
+# Output File Settings
+# ===================
+$CreateFile = "Y"                            # Y will save the report as file (recommended)
+$outputpath = ""                             # Output folder (blank = Desktop)
 
+# PDF Settings
+# ===========
+$WantPDFFile = "false"                       # Set to "true" to create PDF files
+                                             # Requires wkhtmltopdf.exe (see comments at top of script)
+$PDFConverter = "c:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe" # Path to wkhtmltopdf.exe
 
-$fromemail = "user1@example.com"     # Change to the from address that will be used to send the report email
-$defaultSentTo = "user2@example.com" # Change to the to address that will receive the report email - Sample: "email.one@example.com", "email.two@example.com"
-[string[]] $SendToList =  "$defaultSentTo"      # The email will be sent to
-$subjectline = "$subOUonly AD Snapshot Report"  # Subject line
-$AdminGroup = "Example Admin"             # Change to the OU Admin group you want the Admin section to use
-$filename = $subOUonly + " AD Snapshot Report.html"		# html filename
-$filenamePDF = $subOUonly + " AD Snapshot Report.pdf"	# pdf filename
+# Email Settings
+# =============
+$SendEmail = "N"                             # Set to "Y" to send report via email
+$fromemail = "user1@example.com"             # From email address
+$defaultSentTo = "user2@example.com"         # To email address
+$CcList = ""                                 # CC recipients (comma-separated list)
+$smtpserver = "smtp.example.org"             # SMTP server address
 
+# Report Display Settings
+# ======================
+$ServerUpTimeAlarm = 30                      # Days before server uptime is marked in red
+$ComputerStaleDays = 80                      # Days before computer is considered stale
+$UserStaleDays = 80                          # Days before user account is considered stale
+$PCsort = "name"                             # Computer sort order: "name" or "date"
+$Usersort = "name"                           # User sort order: "name" or "date"
+$HideDisabledUsers = "false"                 # Set to "true" to hide disabled users
+$listALLComputers = "true"                   # Set to "true" to include servers in computer list
+
+# Section Toggle Settings
+# =====================
+$skipadmin = "false"                         # Set to "true" to skip admin section
+$skipServer = "false"                        # Set to "true" to skip server section
+$skipUsers = "false"                         # Set to "true" to skip users section
+$skipComputers = "false"                     # Set to "true" to skip computers section
+$skipBitlockerStatus = "true"                # Set to "true" to skip bitlocker section
+
+################################################################################################################
+#                             END OF CONFIGURATION SETTINGS                                                     #
+################################################################################################################
 
 #########################################################################################################
 ### # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###
@@ -88,10 +104,21 @@ $filenamePDF = $subOUonly + " AD Snapshot Report.pdf"	# pdf filename
 ### # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###
 #########################################################################################################
 
-if ( $realm -eq "example"){$DomainCN = "DC=example,DC=org" ; $Server = "domaincontroller.example.org"}
-	# Change the above options to match your organization
+Import-Module ActiveDirectory 
+foreach ($subOU in $OUlist) {         ###  DO NOT MODIFY
+try {$subOUonly = $subOU.substring(0,$subOU.IndexOf(",",1))           ###  DO NOT MODIFY
+} catch { $subOUonly = $subOU }       ###  DO NOT MODIFY
+$starttime = Get-Date
 
-$Version = "AD Snapshot Report Version 1.0.0"
+# Set email recipient list and subject line
+[string[]] $SendToList = "$defaultSentTo"      # The email will be sent to the address specified in the configuration
+$subjectline = "$subOUonly AD Snapshot Report"  # Subject line
+
+# Set filenames for reports
+$filename = $subOUonly + " AD Snapshot Report.html"		# html filename
+$filenamePDF = $subOUonly + " AD Snapshot Report.pdf"	# pdf filename
+
+$Version = "AD Snapshot Report Version 1.2.0"
 #$DebugPreference = "Continue"
 $DebugPreference = "SilentlyContinue"
 #$VerbosePreference = "Continue"

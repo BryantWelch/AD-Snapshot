@@ -63,6 +63,8 @@ function Save-Settings {
         OUList = $txtOUList.Text
         Realm = $txtRealm.Text
         AdminGroup = $txtAdminGroup.Text
+        DomainController = $txtDomainController.Text
+        DomainCN = $txtDomainCN.Text
         ServerUpTimeAlarm = $numServerUpTimeAlarm.Value
         ComputerStaleDays = $numComputerStaleDays.Value
         UserStaleDays = $numUserStaleDays.Value
@@ -103,6 +105,8 @@ function Import-AppSettings {
         $txtOUList.Text = $settings.OUList
         $txtRealm.Text = $settings.Realm
         $txtAdminGroup.Text = $settings.AdminGroup
+        if ($settings.DomainController) { $txtDomainController.Text = $settings.DomainController }
+        if ($settings.DomainCN) { $txtDomainCN.Text = $settings.DomainCN }
         $numServerUpTimeAlarm.Value = $settings.ServerUpTimeAlarm
         $numComputerStaleDays.Value = $settings.ComputerStaleDays
         $numUserStaleDays.Value = $settings.UserStaleDays
@@ -187,6 +191,16 @@ function Start-ADSnapshot {
 `$defaultSentTo = "$($txtToEmail.Text)"
 `$AdminGroup = "$($txtAdminGroup.Text)"
 
+# Custom Domain Settings
+if ("$($txtRealm.Text)" -eq "example") {
+    `$DomainCN = "DC=example,DC=org"
+    `$Server = "domaincontroller.example.org"
+} else {
+    # Use custom domain settings from GUI
+    `$DomainCN = "$($txtDomainCN.Text)"
+    `$Server = "$($txtDomainController.Text)"
+}
+
 # Include the original script content
 "@
         
@@ -198,6 +212,9 @@ function Start-ADSnapshot {
         $scriptBody = $originalScriptContent -replace '(?sm)^.*?#########################################################################################################\s*###\s*DO NOT CHANGE ANYTHING BELOW THIS LINE\s*###\s*#########################################################################################################', '#########################################################################################################
 ### DO NOT CHANGE ANYTHING BELOW THIS LINE ###
 #########################################################################################################'
+        
+        # Remove the hardcoded domain settings line from the original script
+        $scriptBody = $scriptBody -replace 'if \( \$realm -eq "example"\)\{\$DomainCN = "DC=example,DC=org" ; \$Server = "domaincontroller\.example\.org"\}.*?\n', ''
         
         # Combine the parameter declarations with the script body
         $scriptContent += $scriptBody

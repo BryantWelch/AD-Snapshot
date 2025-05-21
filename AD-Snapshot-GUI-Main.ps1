@@ -169,7 +169,7 @@ $exitMenuItem.Add_Click({
 # About menu item click
 $aboutMenuItem.Add_Click({
     [System.Windows.Forms.MessageBox]::Show(
-        "Active Directory Snapshot Tool`r`n`r`nVersion 1.0.0`r`n`r`nThis tool provides a GUI interface for the AD-Snapshot PowerShell script.`r`n`r`nOriginal script by Bryant Welch",
+        "Active Directory Snapshot Tool`r`n`r`nVersion 1.2.0`r`n`r`nThis tool provides a GUI interface for the AD-Snapshot PowerShell script.`r`n`r`nOriginal script by Bryant Welch",
         "About AD Snapshot Tool",
         [System.Windows.Forms.MessageBoxButtons]::OK,
         [System.Windows.Forms.MessageBoxIcon]::Information

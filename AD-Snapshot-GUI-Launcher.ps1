@@ -10,7 +10,7 @@
     File Name      : AD-Snapshot-GUI-Launcher.ps1
     Author         : Bryant Welch
     Prerequisite   : PowerShell 5.0, Active Directory module (recommended)
-    Version        : 1.0.0
+    Version        : 1.2.0
 #>
 
 # Check if running as administrator

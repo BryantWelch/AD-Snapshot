@@ -12,6 +12,7 @@ $chkCreateFile.Text = "Save Report as File"
 $chkCreateFile.Location = New-Object System.Drawing.Point(20, 25)
 $chkCreateFile.Size = New-Object System.Drawing.Size(200, 20)
 $chkCreateFile.Checked = $true
+$toolTip.SetToolTip($chkCreateFile, "When checked, the report will be saved as an HTML file. This is recommended for sortable user and computer lists.")
 $grpFileOptions.Controls.Add($chkCreateFile)
 
 # Output Path
@@ -24,6 +25,7 @@ $grpFileOptions.Controls.Add($lblOutputPath)
 $txtOutputPath = New-Object System.Windows.Forms.TextBox
 $txtOutputPath.Location = New-Object System.Drawing.Point(220, 55)
 $txtOutputPath.Size = New-Object System.Drawing.Size(400, 20)
+$toolTip.SetToolTip($txtOutputPath, "Specify the folder where reports will be saved. If left blank, reports will be saved to your desktop.")
 $grpFileOptions.Controls.Add($txtOutputPath)
 
 $btnBrowseOutputPath = New-Object System.Windows.Forms.Button
@@ -38,6 +40,7 @@ $chkWantPDFFile.Text = "Create PDF Report"
 $chkWantPDFFile.Location = New-Object System.Drawing.Point(20, 85)
 $chkWantPDFFile.Size = New-Object System.Drawing.Size(200, 20)
 $chkWantPDFFile.Checked = $false
+$toolTip.SetToolTip($chkWantPDFFile, "When checked, a PDF version of the report will be created. Requires wkhtmltopdf to be installed.")
 $grpFileOptions.Controls.Add($chkWantPDFFile)
 
 # PDF Converter Path
@@ -51,6 +54,7 @@ $txtPDFConverter = New-Object System.Windows.Forms.TextBox
 $txtPDFConverter.Location = New-Object System.Drawing.Point(220, 115)
 $txtPDFConverter.Size = New-Object System.Drawing.Size(400, 20)
 $txtPDFConverter.Text = "c:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe"
+$toolTip.SetToolTip($txtPDFConverter, "Path to the wkhtmltopdf executable. Required for PDF generation. Download from http://wkhtmltopdf.org/downloads.html")
 $grpFileOptions.Controls.Add($txtPDFConverter)
 
 $btnBrowsePDFConverter = New-Object System.Windows.Forms.Button
@@ -72,6 +76,7 @@ $chkSendEmail.Text = "Send Email Report"
 $chkSendEmail.Location = New-Object System.Drawing.Point(20, 25)
 $chkSendEmail.Size = New-Object System.Drawing.Size(200, 20)
 $chkSendEmail.Checked = $false
+$toolTip.SetToolTip($chkSendEmail, "When checked, the report will be emailed to the specified recipients.")
 $grpEmailOptions.Controls.Add($chkSendEmail)
 
 # From Email
@@ -85,6 +90,7 @@ $txtFromEmail = New-Object System.Windows.Forms.TextBox
 $txtFromEmail.Location = New-Object System.Drawing.Point(220, 55)
 $txtFromEmail.Size = New-Object System.Drawing.Size(400, 20)
 $txtFromEmail.Text = "user1@example.com"
+$toolTip.SetToolTip($txtFromEmail, "The email address that will appear as the sender of the report.")
 $grpEmailOptions.Controls.Add($txtFromEmail)
 
 # To Email
@@ -98,6 +104,7 @@ $txtToEmail = New-Object System.Windows.Forms.TextBox
 $txtToEmail.Location = New-Object System.Drawing.Point(220, 85)
 $txtToEmail.Size = New-Object System.Drawing.Size(400, 20)
 $txtToEmail.Text = "user2@example.com"
+$toolTip.SetToolTip($txtToEmail, "The primary recipient email address for the report.")
 $grpEmailOptions.Controls.Add($txtToEmail)
 
 # CC List
@@ -110,6 +117,7 @@ $grpEmailOptions.Controls.Add($lblCcList)
 $txtCcList = New-Object System.Windows.Forms.TextBox
 $txtCcList.Location = New-Object System.Drawing.Point(220, 115)
 $txtCcList.Size = New-Object System.Drawing.Size(400, 20)
+$toolTip.SetToolTip($txtCcList, "Additional recipients for the report email. For multiple recipients, use comma-separated email addresses.")
 $grpEmailOptions.Controls.Add($txtCcList)
 
 # SMTP Server
@@ -123,6 +131,7 @@ $txtSmtpServer = New-Object System.Windows.Forms.TextBox
 $txtSmtpServer.Location = New-Object System.Drawing.Point(220, 145)
 $txtSmtpServer.Size = New-Object System.Drawing.Size(400, 20)
 $txtSmtpServer.Text = "smtp.example.org"
+$toolTip.SetToolTip($txtSmtpServer, "The SMTP server that will be used to send the email report. Example: smtp.office365.com")
 $grpEmailOptions.Controls.Add($txtSmtpServer)
 
 # Attach PDF to Email
@@ -131,4 +140,5 @@ $chkAttachPDF.Text = "Attach PDF to Email (requires PDF option enabled)"
 $chkAttachPDF.Location = New-Object System.Drawing.Point(20, 175)
 $chkAttachPDF.Size = New-Object System.Drawing.Size(350, 20)
 $chkAttachPDF.Checked = $false
+$toolTip.SetToolTip($chkAttachPDF, "When checked, the PDF report will be attached to the email. Requires the 'Create PDF Report' option to be enabled.")
 $grpEmailOptions.Controls.Add($chkAttachPDF)

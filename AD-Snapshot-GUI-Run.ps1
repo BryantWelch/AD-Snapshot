@@ -32,6 +32,7 @@ $btnRunReport = New-Object System.Windows.Forms.Button
 $btnRunReport.Text = "Run Report"
 $btnRunReport.Location = New-Object System.Drawing.Point(10, 445)
 $btnRunReport.Size = New-Object System.Drawing.Size(120, 30)
+$toolTip.SetToolTip($btnRunReport, "Start the AD Snapshot report generation process using the current configuration settings.")
 $tabRun.Controls.Add($btnRunReport)
 
 # View Report Button
@@ -40,6 +41,7 @@ $btnViewReport.Text = "View Report"
 $btnViewReport.Location = New-Object System.Drawing.Point(140, 445)
 $btnViewReport.Size = New-Object System.Drawing.Size(120, 30)
 $btnViewReport.Enabled = $false
+$toolTip.SetToolTip($btnViewReport, "Open the generated HTML report in your default web browser.")
 $tabRun.Controls.Add($btnViewReport)
 
 # Open Report Folder Button
@@ -48,6 +50,7 @@ $btnOpenReportFolder.Text = "Open Report Folder"
 $btnOpenReportFolder.Location = New-Object System.Drawing.Point(270, 445)
 $btnOpenReportFolder.Size = New-Object System.Drawing.Size(150, 30)
 $btnOpenReportFolder.Enabled = $false
+$toolTip.SetToolTip($btnOpenReportFolder, "Open the folder containing the generated report files.")
 $tabRun.Controls.Add($btnOpenReportFolder)
 
 # Cancel Button
