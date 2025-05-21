@@ -3,7 +3,7 @@
 
 This PowerShell tool is designed to collect information about Active Directory (AD) objects, including admin membership, user information, and computer information. It provides both a command-line script and a graphical user interface (GUI) to make it easy to generate comprehensive AD reports. The tool uses various AD cmdlets to retrieve data from your domain.
 
-![image](https://github.com/user-attachments/assets/4527492e-8dd5-4cb5-b4ee-2cd63ade70e0)
+![image](https://github.com/user-attachments/assets/1fc448cc-b4d1-4314-bdcc-8edef2707f74)
 
 
 ## Features 
