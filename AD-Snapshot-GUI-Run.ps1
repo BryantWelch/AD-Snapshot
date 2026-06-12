@@ -1,0 +1,70 @@
+#region Run Report Tab
+# Status Group Box
+$grpStatus = New-Object System.Windows.Forms.GroupBox
+$grpStatus.Text = "Status"
+$grpStatus.Location = New-Object System.Drawing.Point(10, 20)
+$grpStatus.Size = New-Object System.Drawing.Size(740, 380)
+$tabRun.Controls.Add($grpStatus)
+
+# Status TextBox
+$txtStatus = New-Object System.Windows.Forms.TextBox
+$txtStatus.Location = New-Object System.Drawing.Point(20, 25)
+$txtStatus.Size = New-Object System.Drawing.Size(700, 340)
+$txtStatus.Multiline = $true
+$txtStatus.ScrollBars = "Vertical"
+$txtStatus.ReadOnly = $true
+$txtStatus.Font = New-Object System.Drawing.Font("Consolas", 9)
+$txtStatus.Text = "Ready to run AD Snapshot report.`r`n`r`nClick 'Run Report' to begin.`r`n`r`n"
+$grpStatus.Controls.Add($txtStatus)
+
+# Progress Bar
+$progressBar = New-Object System.Windows.Forms.ProgressBar
+$progressBar.Location = New-Object System.Drawing.Point(10, 410)
+$progressBar.Size = New-Object System.Drawing.Size(740, 25)
+$progressBar.Style = "Continuous"
+$progressBar.Minimum = 0
+$progressBar.Maximum = 100
+$progressBar.Value = 0
+$tabRun.Controls.Add($progressBar)
+
+# Run Report Button
+$btnRunReport = New-Object System.Windows.Forms.Button
+$btnRunReport.Text = "Run Report"
+$btnRunReport.Location = New-Object System.Drawing.Point(10, 445)
+$btnRunReport.Size = New-Object System.Drawing.Size(120, 30)
+$toolTip.SetToolTip($btnRunReport, "Start the AD Snapshot report generation process using the current configuration settings.")
+$tabRun.Controls.Add($btnRunReport)
+
+# View Report Button
+$btnViewReport = New-Object System.Windows.Forms.Button
+$btnViewReport.Text = "View Report"
+$btnViewReport.Location = New-Object System.Drawing.Point(140, 445)
+$btnViewReport.Size = New-Object System.Drawing.Size(120, 30)
+$btnViewReport.Enabled = $false
+$toolTip.SetToolTip($btnViewReport, "Open the generated HTML report in your default web browser.")
+$tabRun.Controls.Add($btnViewReport)
+
+# Open Report Folder Button
+$btnOpenReportFolder = New-Object System.Windows.Forms.Button
+$btnOpenReportFolder.Text = "Open Report Folder"
+$btnOpenReportFolder.Location = New-Object System.Drawing.Point(270, 445)
+$btnOpenReportFolder.Size = New-Object System.Drawing.Size(150, 30)
+$btnOpenReportFolder.Enabled = $false
+$toolTip.SetToolTip($btnOpenReportFolder, "Open the folder containing the generated report files.")
+$tabRun.Controls.Add($btnOpenReportFolder)
+
+# Test AD Connection Button
+$btnTestConnection = New-Object System.Windows.Forms.Button
+$btnTestConnection.Text = "Test AD Connection"
+$btnTestConnection.Location = New-Object System.Drawing.Point(430, 445)
+$btnTestConnection.Size = New-Object System.Drawing.Size(150, 30)
+$toolTip.SetToolTip($btnTestConnection, "Verify the Active Directory module is available and the configured domain controller is reachable before running a full report.")
+$tabRun.Controls.Add($btnTestConnection)
+
+# Cancel Button
+$btnCancel = New-Object System.Windows.Forms.Button
+$btnCancel.Text = "Cancel"
+$btnCancel.Location = New-Object System.Drawing.Point(630, 445)
+$btnCancel.Size = New-Object System.Drawing.Size(120, 30)
+$btnCancel.Enabled = $false
+$tabRun.Controls.Add($btnCancel)
