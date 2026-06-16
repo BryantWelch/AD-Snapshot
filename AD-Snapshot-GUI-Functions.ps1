@@ -67,10 +67,11 @@ function Update-DependentControls {
     $wantFiles = $chkCreateFile.Checked -or $chkExportCSV.Checked
     foreach ($c in @($lblOutputPath, $txtOutputPath, $btnBrowseOutputPath)) { $c.Enabled = $wantFiles }
 
-    # Email controls are only relevant when emailing
+    # Keep email fields enabled so cue-banner placeholders stay visible and
+    # users can prefill settings before turning email delivery on.
     $pdfOn   = $chkWantPDFFile.Checked
     $emailOn = $chkSendEmail.Checked
-    foreach ($c in @($lblFromEmail, $txtFromEmail, $lblToEmail, $txtToEmail, $lblCcList, $txtCcList, $lblSmtpServer, $txtSmtpServer)) { $c.Enabled = $emailOn }
+    foreach ($c in @($lblFromEmail, $txtFromEmail, $lblToEmail, $txtToEmail, $lblCcList, $txtCcList, $lblSmtpServer, $txtSmtpServer)) { $c.Enabled = $true }
 
     # Attaching a PDF requires both a PDF and an email
     $chkAttachPDF.Enabled = ($pdfOn -and $emailOn)

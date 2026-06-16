@@ -14,7 +14,7 @@ $tabConfig.Controls.Add($grpDomain)
 
 # OU List
 $lblOUList = New-Object System.Windows.Forms.Label
-$lblOUList.Text = "OU(s) (blank = whole domain):"
+$lblOUList.Text = "OU(s):"
 $lblOUList.Location = New-Object System.Drawing.Point(15, 30)
 $lblOUList.Size = New-Object System.Drawing.Size(190, 20)
 $grpDomain.Controls.Add($lblOUList)
@@ -23,12 +23,12 @@ $txtOUList = New-Object System.Windows.Forms.TextBox
 $txtOUList.Location = New-Object System.Drawing.Point(210, 28)
 $txtOUList.Size = New-Object System.Drawing.Size(533, 22)
 $txtOUList.Text = ""
-$toolTip.SetToolTip($txtOUList, "Leave BLANK to scan the entire domain. Or enter OU name(s) or full OU distinguished name(s). For multiple, use commas: 'Sales,IT' or 'OU=Sales,DC=contoso,DC=com'.")
+$toolTip.SetToolTip($txtOUList, "Leave blank to scan the entire domain, or enter OU name(s) / full OU distinguished name(s). For multiple OUs, separate entries with commas: 'Sales,IT' or 'OU=Sales,DC=contoso,DC=com'.")
 $grpDomain.Controls.Add($txtOUList)
 
 # Realm
 $lblRealm = New-Object System.Windows.Forms.Label
-$lblRealm.Text = "Realm Name (optional):"
+$lblRealm.Text = "Realm Name:"
 $lblRealm.Location = New-Object System.Drawing.Point(15, 60)
 $lblRealm.Size = New-Object System.Drawing.Size(190, 20)
 $grpDomain.Controls.Add($lblRealm)
@@ -37,12 +37,12 @@ $txtRealm = New-Object System.Windows.Forms.TextBox
 $txtRealm.Location = New-Object System.Drawing.Point(210, 58)
 $txtRealm.Size = New-Object System.Drawing.Size(533, 22)
 $txtRealm.Text = ""
-$toolTip.SetToolTip($txtRealm, "Optional label for the report. Leave BLANK to auto-detect the domain's NetBIOS name.")
+$toolTip.SetToolTip($txtRealm, "Report label / realm name. Leave blank to auto-detect the domain's NetBIOS name.")
 $grpDomain.Controls.Add($txtRealm)
 
 # Domain Controller
 $lblDomainController = New-Object System.Windows.Forms.Label
-$lblDomainController.Text = "Domain Controller (auto):"
+$lblDomainController.Text = "Domain Controller:"
 $lblDomainController.Location = New-Object System.Drawing.Point(15, 90)
 $lblDomainController.Size = New-Object System.Drawing.Size(190, 20)
 $grpDomain.Controls.Add($lblDomainController)
@@ -51,12 +51,12 @@ $txtDomainController = New-Object System.Windows.Forms.TextBox
 $txtDomainController.Location = New-Object System.Drawing.Point(210, 88)
 $txtDomainController.Size = New-Object System.Drawing.Size(533, 22)
 $txtDomainController.Text = ""
-$toolTip.SetToolTip($txtDomainController, "Leave BLANK to auto-detect a domain controller. Set it (e.g. 'DC01.contoso.com') to target a specific DC or another domain.")
+$toolTip.SetToolTip($txtDomainController, "Leave blank to auto-detect a domain controller. Set it (e.g. 'DC01.contoso.com') to target a specific DC or another domain.")
 $grpDomain.Controls.Add($txtDomainController)
 
 # Domain Common Name
 $lblDomainCN = New-Object System.Windows.Forms.Label
-$lblDomainCN.Text = "Domain Common Name (auto):"
+$lblDomainCN.Text = "Domain Common Name:"
 $lblDomainCN.Location = New-Object System.Drawing.Point(15, 120)
 $lblDomainCN.Size = New-Object System.Drawing.Size(190, 20)
 $grpDomain.Controls.Add($lblDomainCN)
@@ -65,7 +65,7 @@ $txtDomainCN = New-Object System.Windows.Forms.TextBox
 $txtDomainCN.Location = New-Object System.Drawing.Point(210, 118)
 $txtDomainCN.Size = New-Object System.Drawing.Size(533, 22)
 $txtDomainCN.Text = ""
-$toolTip.SetToolTip($txtDomainCN, "Leave BLANK to auto-detect. Otherwise the domain DN in LDAP format (e.g. 'DC=contoso,DC=com').")
+$toolTip.SetToolTip($txtDomainCN, "Leave blank to auto-detect. Otherwise enter the domain DN in LDAP format (e.g. 'DC=contoso,DC=com').")
 $grpDomain.Controls.Add($txtDomainCN)
 
 # Admin Group

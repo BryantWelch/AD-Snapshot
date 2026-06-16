@@ -39,7 +39,7 @@ $grpFileOptions.Controls.Add($chkExportCSV)
 
 # --- Destination folder ---
 $lblOutputPath = New-Object System.Windows.Forms.Label
-$lblOutputPath.Text = "Save to folder:"
+$lblOutputPath.Text = "Output folder:"
 $lblOutputPath.Location = New-Object System.Drawing.Point(20, 70)
 $lblOutputPath.Size = New-Object System.Drawing.Size(90, 20)
 $grpFileOptions.Controls.Add($lblOutputPath)

@@ -234,16 +234,16 @@ $aboutMenuItem.Add_Click({
 
 $mainForm.Add_Load({
     Import-AppSettings
-    # Grey placeholder hints for the auto-detect / optional fields
-    Set-CueBanner $txtOUList           "blank = entire domain (or OU name / DN)"
-    Set-CueBanner $txtRealm            "auto-detect domain name"
-    Set-CueBanner $txtDomainController "auto-detect a domain controller"
-    Set-CueBanner $txtDomainCN         "auto-detect (e.g. DC=contoso,DC=com)"
-    Set-CueBanner $txtOutputPath       "blank = save to Desktop"
-    Set-CueBanner $txtFromEmail        "sender@yourdomain.com"
-    Set-CueBanner $txtToEmail          "recipient@yourdomain.com"
-    Set-CueBanner $txtCcList           "optional, comma separated"
-    Set-CueBanner $txtSmtpServer       "smtp.yourdomain.com"
+    # Grey placeholder hints for fields that can be auto-detected or scoped.
+    Set-CueBanner $txtOUList           "Auto-detect entire domain, or enter OU names / DNs separated by commas"
+    Set-CueBanner $txtRealm            "Auto-detect domain name"
+    Set-CueBanner $txtDomainController "Auto-detect domain controller"
+    Set-CueBanner $txtDomainCN         "Auto-detect domain DN (e.g. DC=contoso,DC=com)"
+    Set-CueBanner $txtOutputPath       "Defaults to Desktop"
+    Set-CueBanner $txtFromEmail        "Example: reports@contoso.com"
+    Set-CueBanner $txtToEmail          "Example: admin@contoso.com"
+    Set-CueBanner $txtCcList           "Example: security@contoso.com, helpdesk@contoso.com"
+    Set-CueBanner $txtSmtpServer       "Example: smtp.contoso.com"
     # Reflect loaded settings in dependent control states
     Update-DependentControls
 })
