@@ -243,7 +243,7 @@ if ($skipDomainOverview -ne "true" -and $domainObj) {
     try { $builtinAdmin = Get-ADUser -Identity "$($domainObj.DomainSID.Value)-500" -Properties Enabled, PasswordLastSet, LastLogonDate @adParams -ErrorAction Stop } catch { }
 
     # ---- Summary table ----
-    $ov = "<h3>Summary</h3><table class='kv'><tbody>"
+    $ov = "<div class='kv-block'><h3>Summary</h3><table class='kv'><tbody>"
     if ($forestObj) { $ov += New-KvRow "Forest" (ConvertTo-HtmlText $forestObj.Name) }
     $ov += New-KvRow "Domain (DNS)"     (ConvertTo-HtmlText $domainObj.DNSRoot)
     $ov += New-KvRow "Domain (NetBIOS)" (ConvertTo-HtmlText $domainObj.NetBIOSName)
@@ -266,10 +266,10 @@ if ($skipDomainOverview -ne "true" -and $domainObj) {
         if ($null -ne $baPwAge) { $baText += " &bull; password $baPwAge days old" }
         $ov += New-KvRow "Built-in Administrator (RID 500)" $baText ($(if ($baEnabled) { "warn" } else { "ok" }))
     }
-    $ov += "</tbody></table>"
+    $ov += "</tbody></table></div>"
 
     # ---- FSMO roles ----
-    $ov += "<h3>FSMO Role Holders</h3><table class='kv'><tbody>"
+    $ov += "<div class='kv-block'><h3>FSMO Role Holders</h3><table class='kv'><tbody>"
     $ov += New-KvRow "PDC Emulator"          (ConvertTo-HtmlText ([string]$domainObj.PDCEmulator))
     $ov += New-KvRow "RID Master"            (ConvertTo-HtmlText ([string]$domainObj.RIDMaster))
     $ov += New-KvRow "Infrastructure Master" (ConvertTo-HtmlText ([string]$domainObj.InfrastructureMaster))
@@ -277,11 +277,11 @@ if ($skipDomainOverview -ne "true" -and $domainObj) {
         $ov += New-KvRow "Schema Master"        (ConvertTo-HtmlText ([string]$forestObj.SchemaMaster))
         $ov += New-KvRow "Domain Naming Master" (ConvertTo-HtmlText ([string]$forestObj.DomainNamingMaster))
     }
-    $ov += "</tbody></table>"
+    $ov += "</tbody></table></div>"
 
     # ---- Password & lockout policy ----
     if ($pwPol) {
-        $ov += "<h3>Default Domain Password Policy</h3><table class='kv'><tbody>"
+        $ov += "<div class='kv-block'><h3>Default Domain Password Policy</h3><table class='kv'><tbody>"
         $minLen = [int]$pwPol.MinPasswordLength
         $ov += New-KvRow "Minimum password length" $minLen ($(if ($minLen -lt 8) { "danger" } elseif ($minLen -lt 14) { "warn" } else { "ok" }))
         $ov += New-KvRow "Complexity enabled" ([string]$pwPol.ComplexityEnabled) ($(if ($pwPol.ComplexityEnabled) { "ok" } else { "danger" }))
@@ -293,27 +293,27 @@ if ($skipDomainOverview -ne "true" -and $domainObj) {
         $ov += New-KvRow "Account lockout threshold" ($(if ($lockThresh -eq 0) { "0 (no lockout)" } else { "$lockThresh attempts" })) ($(if ($lockThresh -eq 0) { "warn" } else { "ok" }))
         $ov += New-KvRow "Lockout duration (min)" ([int]$pwPol.LockoutDuration.TotalMinutes)
         $ov += New-KvRow "Reversible encryption" ([string]$pwPol.ReversibleEncryptionEnabled) ($(if ($pwPol.ReversibleEncryptionEnabled) { "danger" } else { "ok" }))
-        $ov += "</tbody></table>"
+        $ov += "</tbody></table></div>"
     }
 
     # ---- Domain Controller inventory ----
     if (@($dcs).Count -gt 0) {
-        $ov += "<h3>Domain Controllers</h3><table class='sortable' id='tblDCs'><thead><tr><th>Name</th><th>Operating System</th><th>IPv4</th><th>Site</th><th>Global Catalog</th><th>Read-Only</th></tr></thead><tbody>"
+        $ov += "<div class='kv-block'><h3>Domain Controllers</h3><table class='sortable' id='tblDCs'><thead><tr><th>Name</th><th>Operating System</th><th>IPv4</th><th>Site</th><th>Global Catalog</th><th>Read-Only</th></tr></thead><tbody>"
         foreach ($dc in ($dcs | Sort-Object HostName)) {
             $dcOS = [string]$dc.OperatingSystem
             $osBg = if (Test-OSEndOfLife $dcOS) { " style='background:$cDanger;'" } else { "" }
-            $ov += "<tr><td>$(ConvertTo-HtmlText ([string]$dc.HostName))</td><td$osBg>$(ConvertTo-HtmlText $dcOS)</td><td>$(ConvertTo-HtmlText ([string]$dc.IPv4Address))</td><td>$(ConvertTo-HtmlText ([string]$dc.Site))</td><td><center>$(if ($dc.IsGlobalCatalog) { 'Yes' } else { 'No' })</center></td><td><center>$(if ($dc.IsReadOnly) { 'Yes' } else { 'No' })</center></td></tr>"
+            $ov += "<tr><td class='cell-fqdn'>$(ConvertTo-HtmlText ([string]$dc.HostName))</td><td class='cell-wrap'$osBg>$(ConvertTo-HtmlText $dcOS)</td><td>$(ConvertTo-HtmlText ([string]$dc.IPv4Address))</td><td class='cell-wrap'>$(ConvertTo-HtmlText ([string]$dc.Site))</td><td><center>$(if ($dc.IsGlobalCatalog) { 'Yes' } else { 'No' })</center></td><td><center>$(if ($dc.IsReadOnly) { 'Yes' } else { 'No' })</center></td></tr>"
         }
-        $ov += "</tbody></table>"
+        $ov += "</tbody></table></div>"
     }
 
     # ---- Trusts ----
     if (@($trusts).Count -gt 0) {
-        $ov += "<h3>Domain Trusts</h3><table class='sortable' id='tblTrusts'><thead><tr><th>Name</th><th>Direction</th><th>Type</th></tr></thead><tbody>"
+        $ov += "<div class='kv-block'><h3>Domain Trusts</h3><table class='sortable' id='tblTrusts'><thead><tr><th>Name</th><th>Direction</th><th>Type</th></tr></thead><tbody>"
         foreach ($t in $trusts) {
             $ov += "<tr><td>$(ConvertTo-HtmlText ([string]$t.Name))</td><td>$(ConvertTo-HtmlText ([string]$t.Direction))</td><td>$(ConvertTo-HtmlText ([string]$t.TrustType))</td></tr>"
         }
-        $ov += "</tbody></table>"
+        $ov += "</tbody></table></div>"
     }
 
     $script:domainOverviewHTML = $ov
@@ -367,9 +367,11 @@ $script:serverReported = 0
 $script:serverFound    = 0
 $script:userCount      = 0
 $script:userDisabled   = 0
-$script:userStale      = 0
-$script:computerCount  = 0
-$script:computerStale  = 0
+$script:userStale         = 0
+$script:userNeverLoggedIn = 0
+$script:computerCount     = 0
+$script:computerStale     = 0
+$script:computerNeverSeen = 0
 $script:securityFindingsHTML = ""
 
 ########################################################################################################
@@ -480,10 +482,18 @@ if ($skipServer -eq "true") { } else {
                 $GMembers = $group.psbase.invoke("Members")
                 $GMembers | ForEach-Object { $RDP = $RDP + $_.GetType().InvokeMember("Name",'GetProperty', $null, $_, $null) + "<br>" }
                 Write-Verbose "$server RDP users $RDP"
-                # Server IP addresses
+                # Server IP addresses (IPv4 only)
                 $ServerIPlist = ""
-                $serverIPs = Get-WmiObject win32_networkadapterconfiguration -filter "ipenabled = 'True'" -ComputerName $server | Select IPAddress
-                $ServerIPs | ForEach-Object {$ServerIPlist += "<br/>" + $_.IPAddress }
+                $ipv4List = @()
+                $serverIPs = Get-WmiObject win32_networkadapterconfiguration -filter "ipenabled = 'True'" -ComputerName $server | Select-Object -ExpandProperty IPAddress
+                foreach ($addr in @($serverIPs)) {
+                    if ($null -eq $addr) { continue }
+                    foreach ($a in @($addr)) {
+                        if ([string]$a -match '^\d{1,3}(\.\d{1,3}){3}$') { $ipv4List += [string]$a }
+                    }
+                }
+                $ipv4List = @($ipv4List | Select-Object -Unique)
+                if ($ipv4List.Count -gt 0) { $ServerIPlist = '<br/>' + ($ipv4List -join '<br/>') }
                 # Server Local User Accounts
                 $LocalAccts = ""
                 $AllLocalAccounts = Get-WmiObject -Class Win32_UserAccount -Namespace "root\cimv2" -Filter "LocalAccount='$True'" -ComputerName $server
@@ -531,7 +541,7 @@ if ($skipServer -eq "true") { } else {
                 }
             }
             $serverDriveinfo = $serverDriveinfo + "</tr></table>"
-            $serverinfo = $serverinfo + "<tr><td class='server'>$SystemName $ServerIPlist</td><td class='server'>$serverDriveinfo</td><td class='server' style='background-color:$UptimeAlarm;' >$ServerUptime</td><td class='server'>$admin</td><td class='server'>$RDP</td><td class='server'>$LocalAccts</td></tr>"
+            $serverinfo = $serverinfo + "<tr><td class='server cell-host'>$SystemName$ServerIPlist</td><td class='server'>$serverDriveinfo</td><td class='server' style='background-color:$UptimeAlarm;' >$ServerUptime</td><td class='server cell-wrap'>$admin</td><td class='server cell-wrap'>$RDP</td><td class='server cell-wrap'>$LocalAccts</td></tr>"
         }
         catch {
             $errlog += "Error collecting from server: $server -- $($_.Exception.Message)<br>"
@@ -581,7 +591,7 @@ if ($skipUsers -eq "true") { } else {
      $pwdLastSet = [DateTime]::FromFileTime([Int64] $u.pwdLastSet)
      $nameBG = $cNormal
      $logonBg = $cNormal
-     $ActiveUser = "A"
+     $ActiveUser = "Yes"
 ### WhenCreated
      $ADWhenCreated = [DateTime]$u.WhenCreated
      $WhenCreatedYear = $ADWhenCreated.Year
@@ -597,19 +607,18 @@ if ($skipUsers -eq "true") { } else {
      # Robust flag detection via bit masks / the Enabled property (portable across all account types)
      if (($userAC -band 0x10000) -ne 0) { $neverexpire = "X" ; $expireBG = $cDanger } else { $expireBG = $cNormal ; $neverexpire = " " }
      $isDisabled = (-not $u.Enabled) -or (($userAC -band 0x2) -ne 0)
-     if ($isDisabled) { $nameBG = $cInfo; $name = $name + " <span class='tag tag-off'>Disabled</span>" ; $ActiveUser = "D" }
+     if ($isDisabled) { $nameBG = $cInfo; $name = $name + " <span class='tag tag-off'>Disabled</span>" ; $ActiveUser = "No" }
      if ($lockout -gt 2) {$nameBG = $cLock; $name = $name + " <span class='tag tag-lock'>Locked</span>" }
      $now = Get-Date
      if ($lastLogon.Year -lt 2000)  {
-         $logonBg = $cDanger  ## Users who never logged in will flag as red
+         $logonBg = $cInfo
          $lastLogon1 = "Never"
-         $Uptime = $now - $ADWhenCreated
-         if($Uptime.Days -gt $UserStaleDays) { $WhenCreatedBG = $cDanger } ## Users created over $UserStaleDays ago
+         $script:userNeverLoggedIn++
+     } else {
+         $Uptime = $now - $lastLogon
+         $d = $Uptime.Days
+         if ($d -gt $UserStaleDays){ $logonBg = $cDanger; $script:userStale++ }
      }
-     $Uptime = $now - $lastLogon
-     $d = $Uptime.Days
-     if ($d -gt $UserStaleDays){ $logonBg = $cDanger}	## Users over $UserStaleDays flag red
-     if ($logonBg -eq $cDanger) { $script:userStale++ }
 
      if ($pwdLastSet.Year -gt 2000) {
         $pwdLastSetYear= $pwdLastSet.Year ; $pwdLastSetMonth = $pwdLastSet.Month.ToString("00") ; $pwdLastSetDay = $pwdLastSet.Day.ToString("00")
@@ -632,7 +641,7 @@ if ($skipUsers -eq "true") { } else {
 
 
      write-Verbose  "Password changed on $pwdLastSet - $d days ago"
-     if ($ActiveUser -eq "D") { $script:userDisabled++ }
+     if ($ActiveUser -eq "No") { $script:userDisabled++ }
 
      # ----- Security hygiene flags (B) -----
      if (($userAC -band 0x20) -ne 0)     { $secPwNotReq   += $sam; $name += " <span class='tag tag-risk'>PW NotReq</span>" }
@@ -643,7 +652,7 @@ if ($skipUsers -eq "true") { } else {
      if ($neverexpire -eq "X") { $secNeverExpire += $sam }
      if ($u.AccountExpirationDate -and $u.AccountExpirationDate -lt $now -and -not $isDisabled) { $secExpired += $sam; $name += " <span class='tag tag-off'>Expired</span>" }
 
-     if ($HideDisabledUsers -eq "true" -and $ActiveUser -eq "D") {
+     if ($HideDisabledUsers -eq "true" -and $ActiveUser -eq "No") {
         write-Verbose "Disabled account for $name not displayed on report."
         } Else {
         $UserRecinfo += ,@( $name, $sam, $description, $lastLogon1, $neverexpire, $logonBg, $expireBG,$nameBG,$WhenCreated1,$pwdLastSet1,$pwdBG,$lastLogon,$ActiveUser,$WhenCreatedBG)
@@ -654,7 +663,7 @@ if ($skipUsers -eq "true") { } else {
      $UserRecinfo_sort = $UserRecinfo | sort-object @{Expression={$_[0]}; Ascending=$true} } else{
      $UserRecinfo_sort = $UserRecinfo | sort-object @{Expression={$_[11]}; Ascending=$true} }
      foreach($UserRec in $UserRecinfo_sort) {
-            $adlogons = $adlogons +  "<tr><td style='background:" + $UserRec[7] + ";'>" + $UserRec[0] + "</td><td>" + $UserRec[1] + "</td><td>" + $UserRec[2] + "</td><td style='background:" + $UserRec[5] + ";'><center>" + $UserRec[3] + "</center></td><td style='background:" + $UserRec[10] + ";'><center>" + $UserRec[9] + "</center></td><td style='background:" + $UserRec[13] + ";'><center>" + $UserRec[8] + "</center></td><td style='background:" + $UserRec[6] + ";'><center>" + $UserRec[4] + "</center></td><td><center>" + $UserRec[12] + "</center></td></tr>"
+            $adlogons = $adlogons +  "<tr><td style='background:" + $UserRec[7] + ";'>" + $UserRec[0] + "</td><td>" + $UserRec[1] + "</td><td class='cell-desc'>" + $UserRec[2] + "</td><td style='background:" + $UserRec[5] + ";'><center>" + $UserRec[3] + "</center></td><td style='background:" + $UserRec[10] + ";'><center>" + $UserRec[9] + "</center></td><td style='background:" + $UserRec[13] + ";'><center>" + $UserRec[8] + "</center></td><td style='background:" + $UserRec[6] + ";'><center>" + $UserRec[4] + "</center></td><td><center>" + $UserRec[12] + "</center></td></tr>"
      }
      $adlogons = $adlogons + "</tbody></table><center>$num Users Found.</center><br>" }
 
@@ -727,22 +736,19 @@ if ($skipComputers -eq "true") { } else {
             if ($ADlastLogon -gt $ADlastLogonTimeStamp) {$lastLogon = $ADlastLogon} else {$lastLogon = $ADlastLogonTimeStamp}
             $lastLogonYear = $lastLogon.Year ; $lastLogonMonth = $lastLogon.Month.ToString("00") ; $lastLogonDay = $lastLogon.Day.ToString("00")
             $lastLogon1 = "$lastLogonMonth/$lastLogonDay/$lastLogonYear"
-                $age = $now - $lastLogon
-                if($age.Days -gt $ComputerStaleDays) { $seenBG = $cDanger } ## Stale computers flag red
-
-
             if ($lastLogon.Year -lt 2000)  {
-                $logonBg = $cDanger  ## Computers that never logged in flag red
                 $lastLogon1 = "Never"
-                $age = $now - $c.whenCreated
-                if($age.Days -gt $ComputerStaleDays) { $seenBG = $cDanger } ## Stale computers flag red
+                $seenBG = $cInfo
+                $script:computerNeverSeen++
                 if ($c.logonCount -lt 10 ) {
-                    $logonBg = $cWarning  ## New computers flag yellow
+                    $seenBG = $cWarning
                     $lastLogonYear = $c.whenCreated.Year ; $lastLogonMonth = $c.whenCreated.Month.ToString("00") ; $lastLogonDay = $c.whenCreated.Day.ToString("00")
                     $lastLogon1 = "Created<br />$lastLogonMonth/$lastLogonDay/$lastLogonYear"
                 }
+            } else {
+                $age = $now - $lastLogon
+                if($age.Days -gt $ComputerStaleDays) { $seenBG = $cDanger; $script:computerStale++ }
             }
-        if ($seenBG -eq $cDanger) { $script:computerStale++ }
         $script:computerinfo += ,@( $samCN, $description, $lastLogon1, $seenBG, $OS, $OSV, $OSBG)
         #                     0       1             2            3        4    5      6
 
@@ -767,7 +773,7 @@ if ($skipComputers -eq "true") { } else {
          $computerinfo_sort = $script:computerinfo | sort-object @{Expression={$_[0]}; Ascending=$true} } else {
          $computerinfo_sort = $script:computerinfo | sort-object @{Expression={$_[2]}; Ascending=$true} }
      foreach($computer in $computerinfo_sort) { $adcomputers += "
-     <tr><td>" + $computer[0] + "</td><td>&nbsp; &nbsp;" + $computer[1] + "</td><td style='background:" + $computer[3] + "; width:90px;'>" + $computer[2] + "</td><td style='background:" + $computer[6] + "; width:170px;'>" + $computer[4] + "</td><td style='width:90px;'>" + $computer[5] + "</td></tr>" }
+     <tr><td class='cell-host'>" + $computer[0] + "</td><td class='cell-desc'>" + $computer[1] + "</td><td style='background:" + $computer[3] + "; width:90px;'>" + $computer[2] + "</td><td class='cell-wrap' style='background:" + $computer[6] + "; width:170px;'>" + $computer[4] + "</td><td style='width:90px;'>" + $computer[5] + "</td></tr>" }
 
      $adcomputers+= "</tbody></table><center>$num Computers Found.</center><br>"
 
@@ -830,6 +836,7 @@ if ($skipServer -ne "true")    { $dashboardCards += "<div class='card'><div clas
 if ($skipUsers -ne "true")     {
     $dashboardCards += "<div class='card'><div class='card-value'>$($script:userCount)</div><div class='card-label'>Total Users</div></div>"
     $dashboardCards += "<div class='card card-warn'><div class='card-value'>$($script:userStale)</div><div class='card-label'>Stale Users (&gt;$UserStaleDays d)</div></div>"
+    $dashboardCards += "<div class='card card-muted'><div class='card-value'>$($script:userNeverLoggedIn)</div><div class='card-label'>Never Logged In</div></div>"
     $dashboardCards += "<div class='card card-muted'><div class='card-value'>$($script:userDisabled)</div><div class='card-label'>Disabled Users</div></div>"
     if (@($secNoPreAuth).Count -gt 0) { $dashboardCards += "<div class='card card-danger'><div class='card-value'>$(@($secNoPreAuth).Count)</div><div class='card-label'>AS-REP Roastable</div></div>" }
     if (@($secSPN).Count -gt 0)       { $dashboardCards += "<div class='card card-warn'><div class='card-value'>$(@($secSPN).Count)</div><div class='card-label'>Kerberoastable (SPN)</div></div>" }
@@ -838,6 +845,7 @@ if ($skipUsers -ne "true")     {
 if ($skipComputers -ne "true") {
     $dashboardCards += "<div class='card'><div class='card-value'>$($script:computerCount)</div><div class='card-label'>Total Computers</div></div>"
     $dashboardCards += "<div class='card card-warn'><div class='card-value'>$($script:computerStale)</div><div class='card-label'>Stale Computers (&gt;$ComputerStaleDays d)</div></div>"
+    $dashboardCards += "<div class='card card-muted'><div class='card-value'>$($script:computerNeverSeen)</div><div class='card-label'>Never Seen</div></div>"
 }
 
 $HTMLmessage = @"
@@ -865,6 +873,10 @@ body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 "Segoe UI",Rob
 .card-warn{border-top:3px solid #e0a800;}
 .card-muted{border-top:3px solid #9aa5b1;}
 .card-danger{border-top:3px solid #c0392b;}
+.kv-block{break-inside:avoid;page-break-inside:avoid;margin-bottom:4px;}
+.kv-block h3{break-after:avoid;page-break-after:avoid;}
+.cell-desc,.cell-wrap{max-width:240px;word-wrap:break-word;overflow-wrap:break-word;}
+.cell-fqdn,.cell-host{word-break:break-all;overflow-wrap:anywhere;min-width:100px;max-width:200px;}
 .section{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:22px;box-shadow:0 1px 3px rgba(16,24,40,.04);}
 .section h2{margin:0 0 14px;font-size:16px;color:var(--head);border-left:4px solid var(--brand);padding-left:10px;}
 .section h3{margin:18px 0 8px;font-size:13px;color:var(--head);text-transform:uppercase;letter-spacing:.4px;}
@@ -898,7 +910,21 @@ table.internal{width:340px;}
 .errlog{color:#b02a37;font-weight:600;margin:8px 0;}
 center{font-size:12px;color:var(--muted);}
 .footer{text-align:center;color:var(--muted);font-size:12px;padding:10px 0 30px;}
-@media print{body{background:#fff;}.appbar{box-shadow:none;}.section,.card{box-shadow:none;}.toolbar{display:none;}}
+@media print{
+  body{background:#fff;}
+  .wrap{max-width:none;padding:12px;}
+  .appbar{box-shadow:none;break-inside:avoid;page-break-inside:avoid;}
+  .cards{break-inside:avoid;page-break-inside:avoid;gap:10px;}
+  .card{box-shadow:none;break-inside:avoid;page-break-inside:avoid;flex:1 1 120px;}
+  .card-label{font-size:11px;letter-spacing:.2px;}
+  .section{box-shadow:none;break-inside:auto;}
+  .section>h2{break-after:avoid;page-break-after:avoid;}
+  .kv-block{break-inside:avoid;page-break-inside:avoid;}
+  .toolbar{display:none;}
+  thead{display:table-header-group;}
+  tbody tr{break-inside:avoid;page-break-inside:avoid;}
+  h3{break-after:avoid;page-break-after:avoid;}
+}
 </style>
 <script>
 function adSort(table, col, th){
