@@ -86,7 +86,7 @@ $grpDomain.Controls.Add($txtAdminGroup)
 $grpThresholds = New-Object System.Windows.Forms.GroupBox
 $grpThresholds.Text = "Thresholds && Sorting"
 $grpThresholds.Location = New-Object System.Drawing.Point(12, 196)
-$grpThresholds.Size = New-Object System.Drawing.Size(372, 170)
+$grpThresholds.Size = New-Object System.Drawing.Size(372, 180)
 $tabConfig.Controls.Add($grpThresholds)
 
 # Server Uptime Alarm
@@ -175,7 +175,7 @@ $grpThresholds.Controls.Add($cboUserSort)
 $grpOptions = New-Object System.Windows.Forms.GroupBox
 $grpOptions.Text = "Options"
 $grpOptions.Location = New-Object System.Drawing.Point(396, 196)
-$grpOptions.Size = New-Object System.Drawing.Size(376, 170)
+$grpOptions.Size = New-Object System.Drawing.Size(376, 180)
 $tabConfig.Controls.Add($grpOptions)
 
 # Hide Disabled Users
@@ -208,7 +208,7 @@ $grpOptions.Controls.Add($chkUseAltCreds)
 # ============================ Skip Sections ============================
 $grpSkipSections = New-Object System.Windows.Forms.GroupBox
 $grpSkipSections.Text = "Skip Sections"
-$grpSkipSections.Location = New-Object System.Drawing.Point(12, 374)
+$grpSkipSections.Location = New-Object System.Drawing.Point(12, 384)
 $grpSkipSections.Size = New-Object System.Drawing.Size(760, 90)
 $tabConfig.Controls.Add($grpSkipSections)
 
